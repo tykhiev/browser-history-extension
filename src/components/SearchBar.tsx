@@ -5,7 +5,6 @@ const SearchContainer = styled.div`
   margin: 10px;
   border-radius: 30px;
   border: 1px solid #dcdcdc;
-  max-width: 90vw;
   display: flex;
   align-items: center;
   &:hover {

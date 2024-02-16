@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { HistoryItem } from "./HistoryItem";
 import styled from "styled-components";
 import { HistoryItemType } from "../../types/HistoryItem";
@@ -10,7 +10,8 @@ interface HistoryProps {
 }
 
 export const History: React.FC<HistoryProps> = ({ items }) => {
-  // Function to categorize items by date
+  const listRef = useRef<HTMLUListElement>(null);
+
   const categorizeItemsByDate = (items: HistoryItemType[]) => {
     const categorizedItems: { [key: string]: HistoryItemType[] } = {};
 
@@ -42,10 +43,14 @@ export const History: React.FC<HistoryProps> = ({ items }) => {
   const categorizedItems = categorizeItemsByDate(items);
 
   return (
-    <StyledList>
-      {Object.entries(categorizedItems).map(([date, items]) => (
+    <StyledList ref={listRef}>
+      {Object.entries(categorizedItems).map(([date, items], index) => (
         <React.Fragment key={date}>
-          <StyledDateHeader>{date}</StyledDateHeader>
+          <StyledDateHeader
+            className={`sticky-header ${index !== 0 ? "top-header" : ""}`}
+          >
+            {date}
+          </StyledDateHeader>
           {items.map((item) => (
             <MemoizedHistoryItem key={item.id} item={item} />
           ))}
@@ -62,8 +67,19 @@ const StyledList = styled.ul`
 `;
 
 const StyledDateHeader = styled.li`
+  padding: 0px 10px;
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 5px;
-  padding: 0 8px;
+
+  &.sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+  }
+
+  &.top-header {
+    margin-top: 10px;
+  }
 `;

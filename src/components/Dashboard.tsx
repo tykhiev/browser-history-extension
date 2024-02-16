@@ -9,7 +9,7 @@ interface DashboardProps {}
 export const Dashboard: React.FC<DashboardProps> = () => {
   const defaultQuery = {
     text: "",
-    maxResults: 100,
+    maxResults: 1000,
   };
   const maxResults = useMaxResults(defaultQuery.maxResults);
   const [historyQuery, setHistoryQuery] = useState(defaultQuery);
@@ -31,13 +31,16 @@ export const Dashboard: React.FC<DashboardProps> = () => {
   };
 
   return (
-    <div className="p-0 ">
-      <div className="bg-gray-200">
-        <h2 className="scroll-m-20 border-b p-2 text-2xl font-medium tracking-tight transition-colors first:mt-0">
-          History Dashboard
-        </h2>
-      </div>
+    <div className="p-0 w-[30rem] max-h-[15rem]">
+      <h2 className="scroll-m-20 border-b p-2 text-2xl font-medium tracking-tight transition-colors first:mt-0">
+        Recent History Dashboard
+      </h2>
       <SearchBar onSearchChange={onSearchChange} />
+      {historyItems.length === 0 && (
+        <div className="p-4 text-center">
+          <p>No recent history found.</p>
+        </div>
+      )}
       <History items={historyItems} />
     </div>
   );
