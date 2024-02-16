@@ -19,6 +19,10 @@ export function truncateString(
     : `${value?.substring(startIndex, endIndex)}${options.truncateSymbol}`;
 }
 
-export function urlWithoutSchema(url: string) {
-  return url?.replace(/https:\/\/|http:\/\/|www.|/gi, "");
+export function formatTime(date: number | undefined) {
+  const lastVisitDate = new Date(date ?? 0);
+  const hours = lastVisitDate.getHours().toString().padStart(2, "0");
+  const minutes = lastVisitDate.getMinutes().toString().padStart(2, "0");
+
+  return `${hours}:${minutes}`;
 }
