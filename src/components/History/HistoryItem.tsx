@@ -44,8 +44,7 @@ const StyledHistoryItem = styled.li`
   display: flex;
   align-items: center;
   column-gap: 8px;
-  min-height: 20px;
-  padding: 4px 8px;
+  min-height: 10px;
   border-radius: 4px;
   cursor: default;
   &:hover {

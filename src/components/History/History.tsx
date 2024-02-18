@@ -1,60 +1,57 @@
-import React, { useRef } from "react";
-import { HistoryItem } from "./HistoryItem";
+import React from "react";
 import styled from "styled-components";
 import { HistoryItemType } from "../../types/HistoryItem";
-
-const MemoizedHistoryItem = React.memo(HistoryItem);
+import { HistoryItem } from "./HistoryItem";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import { getFaviconUrl } from "../../service/helper";
+import ExpandIcon from "@mui/icons-material/ExpandMore";
 
 interface HistoryProps {
   items: HistoryItemType[];
 }
 
 export const History: React.FC<HistoryProps> = ({ items }) => {
-  const listRef = useRef<HTMLUListElement>(null);
-
-  const categorizeItemsByDate = (items: HistoryItemType[]) => {
-    const categorizedItems: { [key: string]: HistoryItemType[] } = {};
-
-    items.forEach((item) => {
-      const today = new Date();
-      const itemDate = new Date(item.lastVisitTime!);
-      const diffTime = Math.abs(today.getDate() - itemDate.getDate());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-      let key;
-      if (diffDays === 0) {
-        key = "Today";
-      } else if (diffDays === 1) {
-        key = "Yesterday";
-      } else {
-        key = itemDate.toLocaleDateString(); // Group by date
-      }
-
-      if (!categorizedItems[key]) {
-        categorizedItems[key] = [];
-      }
-
-      categorizedItems[key].push(item);
-    });
-
-    return categorizedItems;
-  };
-
-  const categorizedItems = categorizeItemsByDate(items);
+  const groupedItems: { [key: string]: HistoryItemType[] } = {};
+  items.forEach((item) => {
+    const hostname = getHostName(item.url!);
+    if (!groupedItems[hostname]) {
+      groupedItems[hostname] = [];
+    }
+    groupedItems[hostname].push(item);
+  });
 
   return (
-    <StyledList ref={listRef}>
-      {Object.entries(categorizedItems).map(([date, items], index) => (
-        <React.Fragment key={date}>
-          <StyledDateHeader
-            className={`sticky-header ${index !== 0 ? "top-header" : ""}`}
+    <StyledList>
+      {Object.keys(groupedItems).map((hostname) => (
+        <Accordion key={hostname}>
+          <AccordionSummary
+            aria-controls={`panel-${hostname}-content`}
+            id={`panel-${hostname}-header`}
+            expandIcon={<ExpandIcon />}
+            aria-expanded={true}
+            style={{ flexDirection: "row-reverse" }}
           >
-            {date}
-          </StyledDateHeader>
-          {items.map((item) => (
-            <MemoizedHistoryItem key={item.id} item={item} />
-          ))}
-        </React.Fragment>
+            <div className="flex gap-x-2 min-h-1">
+              <img
+                src={getFaviconUrl(hostname!)}
+                alt={`Favicon of: ${hostname!}`}
+                width="20"
+                height="18"
+                loading="lazy"
+              ></img>
+              {hostname}
+            </div>
+          </AccordionSummary>
+          <AccordionDetails>
+            <GroupContent>
+              {groupedItems[hostname].map((item, index) => (
+                <HistoryItem key={index} item={item} />
+              ))}
+            </GroupContent>
+          </AccordionDetails>
+        </Accordion>
       ))}
     </StyledList>
   );
@@ -66,20 +63,13 @@ const StyledList = styled.ul`
   margin: 0;
 `;
 
-const StyledDateHeader = styled.li`
-  padding: 0px 10px;
-  font-weight: bold;
-  margin-top: 10px;
-  margin-bottom: 5px;
-
-  &.sticky-header {
-    position: sticky;
-    top: 0;
-    background-color: white;
-    z-index: 1;
-  }
-
-  &.top-header {
-    margin-top: 10px;
-  }
+const GroupContent = styled.div`
+  margin-left: 24px;
 `;
+
+// Function to extract hostname from URL
+const getHostName = (url: string) => {
+  const a = document.createElement("a");
+  a.href = url;
+  return a.hostname;
+};
