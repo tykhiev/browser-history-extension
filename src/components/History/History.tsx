@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import { HistoryItemType } from "../../types/HistoryItem";
 import { HistoryItem } from "./HistoryItem";
 import Accordion from "@mui/material/Accordion";
@@ -23,15 +22,17 @@ export const History: React.FC<HistoryProps> = ({ items }) => {
   });
 
   return (
-    <StyledList>
+    <ul className="list-none p-0 m-0 ">
       {Object.keys(groupedItems).map((hostname) => (
         <Accordion key={hostname}>
           <AccordionSummary
             aria-controls={`panel-${hostname}-content`}
             id={`panel-${hostname}-header`}
             expandIcon={<ExpandIcon />}
-            aria-expanded={true}
-            style={{ flexDirection: "row-reverse" }}
+            style={{
+              flexDirection: "row-reverse",
+              borderBottom: "1px solid #e0e0e0",
+            }}
           >
             <div className="flex gap-x-2 min-h-1">
               <img
@@ -45,27 +46,17 @@ export const History: React.FC<HistoryProps> = ({ items }) => {
             </div>
           </AccordionSummary>
           <AccordionDetails>
-            <GroupContent>
+            <div className="ml-6">
               {groupedItems[hostname].map((item, index) => (
                 <HistoryItem key={index} item={item} />
               ))}
-            </GroupContent>
+            </div>
           </AccordionDetails>
         </Accordion>
       ))}
-    </StyledList>
+    </ul>
   );
 };
-
-const StyledList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const GroupContent = styled.div`
-  margin-left: 24px;
-`;
 
 // Function to extract hostname from URL
 const getHostName = (url: string) => {

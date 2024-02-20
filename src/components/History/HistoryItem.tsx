@@ -1,7 +1,7 @@
 import React from "react";
 import { truncateString } from "../../service/helper";
-import styled from "styled-components";
 import { HistoryItemType } from "../../types/HistoryItem";
+import { formatTime } from "../../service/helper";
 
 interface HistoryItemProps {
   item: HistoryItemType;
@@ -12,7 +12,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ item }) => {
 
   return (
     <a href={item.url} target="_blank" title={item.url}>
-      <StyledHistoryItem>
+      <li className="flex items-center gap-2 min-h-[10px] rounded-md  hover:bg-fffbef hover:cursor-pointer">
         <img
           src={faviconUrl}
           alt={`Favicon of: ${item.url}`}
@@ -34,21 +34,12 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ item }) => {
             {truncateString(item.url!, 40)}
           </a>
         </div>
-        {item.formattedTime}
-      </StyledHistoryItem>
+        {item.formattedTime && (
+          <span className="text-gray-500 text-xs font-normal">
+            {formatTime(item.lastVisitTime)}
+          </span>
+        )}
+      </li>
     </a>
   );
 };
-
-const StyledHistoryItem = styled.li`
-  display: flex;
-  align-items: center;
-  column-gap: 8px;
-  min-height: 10px;
-  border-radius: 4px;
-  cursor: default;
-  &:hover {
-    background: #fffbef;
-    cursor: pointer;
-  }
-`;

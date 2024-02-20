@@ -23,11 +23,11 @@ export function formatTime(date: number | undefined) {
   const lastVisitDate = new Date(date ?? 0);
   const hours = lastVisitDate.getHours().toString().padStart(2, "0");
   const minutes = lastVisitDate.getMinutes().toString().padStart(2, "0");
-  const days = lastVisitDate.getDate().toString().padStart(2, "0");
-  const months = (lastVisitDate.getMonth() + 1).toString().padStart(2, "0");
-  const years = lastVisitDate.getFullYear().toString().padStart(2, "0");
+  // const days = lastVisitDate.getDate().toString().padStart(2, "0");
+  // const months = (lastVisitDate.getMonth() + 1).toString().padStart(2, "0");
+  // const years = lastVisitDate.getFullYear().toString().padStart(2, "0");
 
-  return `${days}/${months}/${years} ${hours}:${minutes}`;
+  return `${hours}:${minutes}`;
 }
 
 export function getFaviconUrl(url: string) {

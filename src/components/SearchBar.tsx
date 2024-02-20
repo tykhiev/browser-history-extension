@@ -16,17 +16,6 @@ const SearchContainer = styled.div`
   }
 `;
 
-const SearchInput = styled.input`
-  height: 35px;
-  border: none;
-  padding: 0 30px;
-  flex: 1 auto;
-  outline: none;
-  font-size: 14px;
-  outline: none;
-  border-radius: 30px;
-`;
-
 interface SearchBarProps {
   onSearchChange: (value: string) => void;
   throttleInputMillis?: number;
@@ -55,7 +44,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <SearchContainer>
-      <SearchInput
+      <input
+        className="h-9 border-none px-8 flex-1 outline-none text-sm rounded-full"
         type="text"
         ref={searchInput}
         placeholder="Search"
